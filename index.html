@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+
+<html class="no-js" lang="ko">
+
+<head>
+	<title>Excel Table</title>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+	<script src="https://code.jquery.com/jquery-latest.min.js"></script>
+
+	<link rel="stylesheet" href="./excelTable/excelTable.css"/>
+	<script src="./excelTable/excelTable.js"></script>
+</head>
+
+<body>
+
+	<div>
+		<div class="title">
+			<h3>기본 테이블1</h3>
+			<h5>배열 형태의 데이터를 전달하여 단순 엑셀표 그리는 테이블</h5>
+		</div>
+
+		<table class="table" id="targetTable1">
+		</table>
+
+		<div class="title">
+			<h3>기본 테이블2</h3>
+			<h5>객체 형태의 데이터를 전달하여 엑셀표를 그리며, 에러 표기를 할 수 있는 테이블</h5>
+		</div>
+
+		<table class="table" id="targetTable2">
+			<thead></thead>
+			<tbody></tbody>
+		</table>
+
+		<div class="title">
+			<h3>커스텀 테이블</h3>
+			<h5>배경 색, 글씨 색, 글씨 크기 등을 커스텀 할 수 있는 테이블</h5>
+		</div>
+
+		<table class="table" id="targetTable3">
+			<thead></thead>
+			<tbody></tbody>
+		</table>
+
+	</div>
+
+</body>
+<script>
+	let header = [
+		{
+			displayName : "진단 명", columnName : "executeName", dataType : "STRING", unique : true
+		},
+		{
+			displayName : "일 수", columnName : "days", dataType : "NUMBER", unique : false
+		},
+		{
+			displayName : "1 뎁스", columnName : "domainGroup1", dataType : "STRING", unique : false
+		},
+		{
+			displayName : "2 뎁스", columnName : "domainGroup2", dataType : "STRING", unique : false
+		},
+		{
+			displayName : "3 뎁스", columnName : "domainGroup3", dataType : "STRING", unique : false
+		},
+		{
+			displayName : "도메인", columnName : "domain", dataType : "STRING", unique : false
+		},
+		
+	];
+
+	let origin1 = [
+	  	{
+	  		"executeName" : "네이버", "domainGroup1" : "그룹1", "domainGroup2" : "그룹2", "domainGroup3" : "그룹3","domain" : "도메인", "days" : "7"
+	  	},
+
+	  	{
+	  		"executeName" : "다음", "domainGroup1" : "그룹1", "domainGroup2" : "그룹2", "domainGroup3" : "그룹3","domain" : "도메인", "days" : "10"
+	  	},
+
+	  	{
+	  		"executeName" : "구글", "domainGroup1" : "그룹1", "domainGroup2" : "그룹2", "domainGroup3" : "그룹3","domain" : "도메인", "days" : "15"
+	  	}
+	];
+
+	let origin2 = [
+	  	{
+	  		"executeName" : "123", "domainGroup1" : "333", "domainGroup2" : "그룹2", "domainGroup3" : "그룹3","domain" : "도메인", "days" : "7"
+	  	},
+
+	  	{
+	  		"executeName" : "다음", "domainGroup1" : "그룹1", "domainGroup2" : "그룹2", "domainGroup3" : "그룹3","domain" : "도메인", "days" : "10"
+	  	},
+
+	  	{
+	  		"executeName" : "구글", "domainGroup1" : "그룹1", "domainGroup2" : "그룹2", "domainGroup3" : "그룹3","domain" : "도메인", "days" : "15"
+	  	}
+	];
+
+	let errors = [
+		{"row" : "2", "column" : "A", "errorMessage" : "양식에 맞지 않습니다"},
+		{"row" : "3", "column" : "B", "errorMessage" : "양식에 맞지 않습니다"},
+		{"row" : "4", "column" : "C", "errorMessage" : "양식에 맞지 않습니다"},
+		{"row" : "4", "column" : "F", "errorMessage" : "양식에 맞지 않습니다"}
+	]
+
+$(document).ready(function() {
+	excelTable.init({
+		target : "targetTable1", 
+		//targetObj : $("#targetTable2").get(0),
+		visibleUnique : true, 
+		data : [
+			["네이버","7","그룹1","그룹2","그룹3"], 
+			["다음","10","그룹1","그룹2","그룹3","도메인"], 
+			["구글","15","그룹1","그룹2","그룹3","도메인"], 
+		]
+	});
+
+	excelTable.init({
+		target : "targetTable2", 
+		//targetObj : $("#targetTable2").get(0),
+		visibleUnique : true, 
+		data : {
+			header : header,
+			origin : origin1,
+			errors : errors,
+		}
+	});
+
+	excelTable.init({
+		//target : "targetTable2", 
+		targetObj : $("#targetTable3").get(0),
+		visibleUnique : false, 
+		data : {
+			header : header,
+			origin : origin2,
+			errors : errors,
+		},
+		style : {
+			edge : {
+				fontColor : '#4a4a4a', fontSize : '15px', backgroundColor: 'rgb(207, 203, 203)'
+			},
+			header : {
+				backgroundColor  : '#7676ff', fontColor : 'white'
+			},
+			cell :{
+				backgroundColor  : '#b7b7f8' , fontColor : 'white'
+			},
+			error :{
+				warnColor : '#333333', fontColor : 'white'
+			}
+		}		
+	});
+
+});
+
+</script>
+
+</html>
