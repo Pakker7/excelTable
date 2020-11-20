@@ -11,8 +11,8 @@
 - 작성 방법
   - target or targetObj
     - 필수 값
-    - target은 id명을 입력
-    - targetObj는 객체를 입력
+    - **target은 id명**을 입력
+    - **targetObj는 객체**를 입력
   - visibleUnique
     -  유니크 키 표시 유무
   - data

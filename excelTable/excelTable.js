@@ -23,11 +23,11 @@
 
             } else {
                 this.setHeader(thead);
-	            this.initSheet(thead, tbody);
-	            if (this.object.data.errors && this.object.data.errors.length > 0) {
-	                this.setError(tbody);
-	            }
-	            
+                this.initSheet(thead, tbody);
+                if (this.object.data.errors && this.object.data.errors.length > 0) {
+                    this.setError(tbody);
+                }
+                
             }
 
         },
@@ -39,7 +39,7 @@
             }
 
             if (!obj.data) {
-            	console.error('data는 필수입니다.');
+                console.error('data는 필수입니다.');
                 return;
             }
 
@@ -57,7 +57,12 @@
             }
 
             if (obj.hasOwnProperty('targetObj') && typeof obj.targetObj === "array") {
-        	    console.error("targetObj는 단일대상만 지원합니다.");
+                console.error("targetObj는 단일대상만 지원합니다.");
+                return;
+            }
+
+            if (!obj.hasOwnProperty('targetObj') && !document.getElementById(this.object.target)) {
+                console.error('target은 선택자를 제외한 id값만 해당되며, 입력한 id가 없을 경우 진행되지 않습니다.');
                 return;
             }
 
@@ -66,34 +71,34 @@
         },
 
         getDefaultStructure : function(obj) {
-        	let data = obj.data;
-        	if (!Array.isArray(obj.data)) {
-        		data = {
+            let data = obj.data;
+            if (!Array.isArray(obj.data)) {
+                data = {
                     header: obj.data.header,
                     origin: obj.data.origin,
                     errors: obj.data.errors,
                 }
-        	} 
+            } 
 
-        	return {
+            return {
                 target: obj.target,
                 targetObj: null,
                 visibleUnique: false,
                 data: data,
                 style: {
-	                edge: {
-	                    fontColor: '#6c6b70', backgroundColor: '#a9a9a9', fontSize: '13px'
-	                },
-	                header: {
-	                    fontColor: '#6c6b70', backgroundColor: '#d5d5d5', fontSize: '13px'
-	                },
-	                cell: {
-	                    fontColor: "#6c6b70", backgroundColor: null, fontSize: '13px'
-	                },
-	                error: {
-	                    warnColor: 'yellow', fontColor: "white", backgroundColor: 'rgb(226, 92, 77)', fontSize: '13px'
-	                }
-	            }
+                    edge: {
+                        fontColor: '#6c6b70', backgroundColor: '#a9a9a9', fontSize: '13px'
+                    },
+                    header: {
+                        fontColor: '#6c6b70', backgroundColor: '#d5d5d5', fontSize: '13px'
+                    },
+                    cell: {
+                        fontColor: "#6c6b70", backgroundColor: null, fontSize: '13px'
+                    },
+                    error: {
+                        warnColor: 'yellow', fontColor: "white", backgroundColor: 'rgb(226, 92, 77)', fontSize: '13px'
+                    }
+                }
             };
         },
 
