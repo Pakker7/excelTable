@@ -18,8 +18,8 @@
             let thead = this.target.querySelector("thead");
             let tbody = this.target.querySelector("tbody");
 
-            if (Array.isArray(obj.data)) { 
-                 this.simpleInitSheet(thead, tbody);
+            if (Array.isArray(obj.data)) {
+                this.simpleInitSheet(thead, tbody);
 
             } else {
                 this.setHeader(thead);
@@ -27,7 +27,7 @@
                 if (this.object.data.errors && this.object.data.errors.length > 0) {
                     this.setError(tbody);
                 }
-                
+
             }
 
         },
@@ -61,7 +61,7 @@
                 return;
             }
 
-            if (!obj.hasOwnProperty('targetObj') && !document.getElementById(this.object.target)) {
+            if (!obj.hasOwnProperty('targetObj') && !document.getElementById(obj.target)) {
                 console.error('target은 선택자를 제외한 id값만 해당되며, 입력한 id가 없을 경우 진행되지 않습니다.');
                 return;
             }
@@ -78,7 +78,7 @@
                     origin: obj.data.origin,
                     errors: obj.data.errors,
                 }
-            } 
+            }
 
             return {
                 target: obj.target,
@@ -104,7 +104,7 @@
 
         targetInit: function () {
             this.target = (this.object.targetObj == null) ? document.getElementById(this.object.target) : this.object.targetObj;
-            
+
             let that = this;
             let ary = ["thead", "tbody"];
             ary.forEach(function (element) {
@@ -219,7 +219,7 @@
 
                 let icon = '<span class="glyphicon glyphicon-warning-sign" style="color:yellow;">&nbsp;</span>';
                 if (that.isTextAlignRight(errorData)) {
-                    icon = '<span class="glyphicon glyphicon-warning-sign" style="padding-right:70%;color:yellow;">&nbsp;</span>';
+                    icon = '<div class="ev-warning"><span class="glyphicon glyphicon-warning-sign" style="color:yellow;">&nbsp;</span></div>';
                 }
 
                 that.settings(errorData, 'ev-error', icon + errorData.innerText.trim(), true);
