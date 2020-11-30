@@ -203,7 +203,7 @@
                 selectorColumns.forEach(function (coloumsData) {
                     let excelTd = excelColumn.insertCell();
 
-                    let className = (coloumsData.dataset.dataType.toUpperCase() === 'NUMBER') ? 'text-right ellipsis ev-cell' : 'text-left ellipsis ev-cell';
+                    let className = (coloumsData.dataset.dataType.toUpperCase() === 'NUMBER') ? 'text-right ev-ellipsis ev-cell' : 'text-left ev-ellipsis ev-cell';
                     that.settings(excelTd, className, rowData[coloumsData.dataset.columnName])
                     that.designStyle(excelTd, that.object.style.cell);
 
@@ -225,9 +225,17 @@
                 that.settings(errorData, 'ev-error', icon + errorData.innerText.trim(), true);
                 that.designStyle(errorData, that.object.style.error, true);
 
-                errorData.title = element.errorMessage;
+                errorData.innerHTML = errorData.innerHTML + '<span class="ev-tooltip">' + element.errorMessage + '</span>';
                 that.setErrorEdge(body, element.row, element.column.toUpperCase().charCodeAt());
 
+            });
+
+            $(document).on('mouseenter','[data-toggle=tooltip]', function(){
+                $(this).tooltip('show');
+            });
+
+            $(document).on('mouseleave','[data-toggle=tooltip]', function(){
+                $(this).tooltip('hide');
             });
         },
 
@@ -250,7 +258,7 @@
                 // 인스턴스 추가
                 for (let i = 0; i < headerLength; i++) {
                     let excelTd = excelColumn.insertCell();
-                    let className = 'text-left ellipsis ev-cell';
+                    let className = 'text-left ev-ellipsis ev-cell';
                     let innerHtml = rowData[i] === undefined ? '' : rowData[i];
 
                     that.settings(excelTd, className, innerHtml);
