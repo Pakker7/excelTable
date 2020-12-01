@@ -2,6 +2,7 @@
 
 table thead tr .ev-displayName {font-weight: 800; background: #d5d5d5;text-align: center;width:auto;}
 table thead tr .ev-column {font-weight: 800; background: #a9a9a9;text-align: center;width:auto;}
+/*table thead tr .ev-ellipsis {text-overflow: ellipsis;white-space: nowrap; overflow: hidden; max-width: 0;}*/
 table thead tr .ev-ellipsis {text-overflow: ellipsis;}
 
 table .ev-row {font-weight: 800; background: #a9a9a9;width: 5%; text-align: center;}
@@ -14,10 +15,10 @@ h3 {font-weight: bold;}
 
 /* custom tooltip*/
 .ev-error { position:relative;}
-.ev-tooltip{
+.ev-tooltip {
     display:none;position:absolute!important;
     z-index:100!important;border:1px;
-    background-color:white;
+    background-color:white;text-align: left!important;
     border-style:solid;border-width:1px;border-color:red;padding:3px;color:red;top:20px;left:20px;
 }
 .ev-error:hover span.ev-tooltip{ display:block;}

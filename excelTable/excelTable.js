@@ -230,13 +230,6 @@
 
             });
 
-            $(document).on('mouseenter','[data-toggle=tooltip]', function(){
-                $(this).tooltip('show');
-            });
-
-            $(document).on('mouseleave','[data-toggle=tooltip]', function(){
-                $(this).tooltip('hide');
-            });
         },
 
         simpleInitSheet: function (thead, excelBody) {
