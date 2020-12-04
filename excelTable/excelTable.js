@@ -227,9 +227,19 @@
 
                 errorData.innerHTML = errorData.innerHTML + '<span class="ev-tooltip">' + element.errorMessage + '</span>';
                 that.setErrorEdge(body, element.row, element.column.toUpperCase().charCodeAt());
-
+                
             });
 
+            that.setErrorTooltipTdLast(body);
+            
+        },
+
+        // 마지막 컬럼이 레이아웃을 넘어가지 않게 처리
+        setErrorTooltipTdLast: function(body){
+            $(body).find('tr').each(function (index, item) {
+                let replaceClass = $(item).find('td:last').html().replace('ev-tooltip', 'ev-tooltip-side'); 
+                $(item).find('td:last').html(replaceClass);
+            });    
         },
 
         simpleInitSheet: function (thead, excelBody) {
@@ -290,8 +300,8 @@
 
         setErrorEdge: function (body, row, colunmAsciiCode) {
             let column = colunmAsciiCode - 64; // A의 ascii code 값을 빼서 몇번째 알파벳인지 알아냄
-            this.target.querySelector("thead tr").querySelectorAll('td')[column].style.color = this.object.style.error.backgroundColor;
-            body.querySelectorAll("tr")[row - 2].querySelector(".ev-row").style.color = this.object.style.error.backgroundColor;
+            this.target.querySelector("thead tr").querySelectorAll('td')[column].style.backgroundColor = this.object.style.error.backgroundColor;
+            body.querySelectorAll("tr")[row - 2].querySelector(".ev-row").style.backgroundColor = this.object.style.error.backgroundColor;
         },
 
         isTextAlignRight: function (errorData) {

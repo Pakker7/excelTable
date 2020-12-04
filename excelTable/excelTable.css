@@ -18,8 +18,16 @@ h3 {font-weight: bold;}
 .ev-tooltip {
     display:none;position:absolute!important;
     z-index:100!important;border:1px;
-    background-color:white;text-align: left!important;
-    border-style:solid;border-width:1px;border-color:red;padding:3px;color:red;top:20px;left:20px;
+    background-color:white;text-align: left!important; width:280px;
+    border-style:solid;border-width:1px;border-color:red;padding:3px;color:red;top:-10px;left:20px;
 }
+.ev-tooltip-side { 
+    display:none;position:absolute!important;
+    z-index:100!important;border:1px;
+    background-color:white;text-align: left!important;
+    border-style:solid;border-width:1px;border-color:red;padding:3px;color:red;top:-10px;left:20px;
+}
+
 .ev-error:hover span.ev-tooltip{ display:block;}
+.ev-error:hover span.ev-tooltip-side{ display:block;}
 
