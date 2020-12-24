@@ -31,3 +31,10 @@ h3 {font-weight: bold;}
 .ev-error:hover span.ev-tooltip{ display:block;}
 .ev-error:hover span.ev-tooltip-side{ display:block;}
 
+/* popover */
+table .btn-popover{cursor: pointer; font-size: 14; vertical-align:middle;}
+table .popover{position: fixed; padding: 5px; max-width:none; }
+table .popover-title{color:#747378;}
+table .list-group{max-height: 300px; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch; color:#747378;}
+
+

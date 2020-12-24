@@ -7,6 +7,8 @@
 
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 	<script src="https://code.jquery.com/jquery-latest.min.js"></script>
+	<!-- bootstrap 3에서만 popover 기능이 정상작동함 -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 	<link rel="stylesheet" href="./excelTable/excelTable.css"/>
 	<script src="./excelTable/excelTable.js"></script>
@@ -26,6 +28,7 @@
 		<div class="title">
 			<h3>기본 테이블2</h3>
 			<h5>객체 형태의 데이터를 전달하여 엑셀표를 그리며, 에러 표기를 할 수 있는 테이블</h5>
+			<h5>서브시트 데이터(foreignKey가 true)도 함께 넘긴다면 서브시트로 사용 가능하다</h5>
 		</div>
 
 		<table class="table" id="targetTable2">
@@ -36,6 +39,7 @@
 		<div class="title">
 			<h3>커스텀 테이블</h3>
 			<h5>배경 색, 글씨 색, 글씨 크기 등을 커스텀 할 수 있는 테이블</h5>
+			<h5>서브시트 데이터(foreignKey가 true)도 함께 넘긴다면 서브시트로 사용 가능하다</h5>
 		</div>
 
 		<table class="table" id="targetTable3">
@@ -47,62 +51,19 @@
 
 </body>
 <script>
-	let header = [
-		{
-			displayName : "진단 명", columnName : "executeName", dataType : "STRING", unique : true
-		},
-		{
-			displayName : "일 수", columnName : "days", dataType : "NUMBER", unique : false
-		},
-		{
-			displayName : "1 뎁스", columnName : "domainGroup1", dataType : "STRING", unique : false
-		},
-		{
-			displayName : "2 뎁스", columnName : "domainGroup2", dataType : "STRING", unique : false
-		},
-		{
-			displayName : "3 뎁스", columnName : "domainGroup3", dataType : "STRING", unique : false
-		},
-		{
-			displayName : "도메인", columnName : "domain", dataType : "STRING", unique : false
-		},
-		
-	];
+	let header2 = [{"displayName":"계정 명","columnName":"createUserId","dataType":"STRING","columnHandler":{},"unique":true,"columnkey":"","foreignKey":false},{"displayName":"권한","columnName":"userGradeFormat","dataType":"NUMBER","columnHandler":{},"unique":false,"columnkey":"","foreignKey":false},{"displayName":"이름","columnName":"userName","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"","foreignKey":false},{"displayName":"부서","columnName":"userClass","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"","foreignKey":false},{"displayName":"이메일","columnName":"email","dataType":"LINK","columnHandler":{},"unique":false,"columnkey":"","foreignKey":false},{"displayName":"연락처","columnName":"phone","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"","foreignKey":false},{"displayName":"계정 활성화","columnName":"activation","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"","foreignKey":false},{"displayName":"그룹 등록","columnName":"userGroup","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"createUserId","foreignKey":true}];
 
-	let origin1 = [
-	  	{
-	  		"executeName" : "네이버", "domainGroup1" : "그룹1", "domainGroup2" : "그룹2", "domainGroup3" : "그룹3","domain" : "도메인", "days" : "7"
-	  	},
 
-	  	{
-	  		"executeName" : "다음", "domainGroup1" : "그룹1", "domainGroup2" : "그룹2", "domainGroup3" : "그룹3","domain" : "도메인", "days" : "10"
-	  	},
+	let header3 = [{"displayName":"계정 명","columnName":"createUserId","dataType":"STRING","columnHandler":{},"unique":true,"columnkey":"","foreignKey":false},{"displayName":"권한","columnName":"userGradeFormat","dataType":"NUMBER","columnHandler":{},"unique":false,"columnkey":"","foreignKey":false},{"displayName":"이름","columnName":"userName","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"","foreignKey":false},{"displayName":"부서","columnName":"userClass","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"","foreignKey":false},{"displayName":"이메일","columnName":"email","dataType":"LINK","columnHandler":{},"unique":false,"columnkey":"","foreignKey":false},{"displayName":"연락처","columnName":"phone","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"","foreignKey":false},{"displayName":"계정 활성화","columnName":"activation","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"","foreignKey":false},{"displayName":"그룹 등록","columnName":"userGroup","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"createUserId","foreignKey":true}];
 
-	  	{
-	  		"executeName" : "구글", "domainGroup1" : "그룹1", "domainGroup2" : "그룹2", "domainGroup3" : "그룹3","domain" : "도메인", "days" : "15"
-	  	}
-	];
+	let origin2 = [{"createUserId":"account1","userClass":"부서1","phone":"010-1234-5678","userGradeFormat":"1","activation":"Y","userName":"이름1","userGroup":"사용자 그룹1,사용자 그룹2,사용자 그룹3","email":"itnomads1@itnomads.com"},{"createUserId":"account2","userClass":"부서2","phone":"010-1234-5678","userGradeFormat":"2","activation":"N","userName":"이름2","userGroup":"사용자 그룹4","email":"itnomads2@itnomads.com"},{"createUserId":"account3","userClass":"부서3","phone":"010-1234-5678","userGradeFormat":"3","activation":"Y","userName":"이름3","userGroup":"","email":"itnomads3@itnomads.com"}];
 
-	let origin2 = [
-	  	{
-	  		"executeName" : "123", "domainGroup1" : "333", "domainGroup2" : "그룹2", "domainGroup3" : "그룹3","domain" : "도메인", "days" : "7"
-	  	},
 
-	  	{
-	  		"executeName" : "다음", "domainGroup1" : "그룹1", "domainGroup2" : "그룹2", "domainGroup3" : "그룹3","domain" : "도메인", "days" : "10"
-	  	},
+	let origin3 = [{"createUserId":"account1","userClass":"부서1","phone":"010-1234-5678","userGradeFormat":"1","activation":"Y","userName":"이름1","userGroup":"사용자 그룹1,사용자 그룹2,사용자 그룹3","email":"itnomads1@itnomads.com"},{"createUserId":"account2","userClass":"부서2","phone":"010-1234-5678","userGradeFormat":"2","activation":"N","userName":"이름2","userGroup":"사용자 그룹4","email":"itnomads2@itnomads.com"},{"createUserId":"account3","userClass":"부서3","phone":"010-1234-5678","userGradeFormat":"3","activation":"Y","userName":"이름3","userGroup":"","email":"itnomads3@itnomads.com"}];
 
-	  	{
-	  		"executeName" : "구글", "domainGroup1" : "그룹1", "domainGroup2" : "그룹2", "domainGroup3" : "그룹3","domain" : "도메인", "days" : "15"
-	  	}
-	];
+	let errors2 = [{"columnProperty":{"displayName":"계정 명","columnName":"createUserId","dataType":"STRING","columnHandler":{},"unique":true,"columnkey":"","foreignKey":false},"row":"2","column":"A","data":"account1","errorMessage":"[A:2] 계정 명은(는) 이미 등록된 계정 입니다."},{"columnProperty":{"displayName":"그룹 등록","columnName":"userGroup","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"createUserId","foreignKey":true},"row":"2","column":"B","data":"사용자 그룹1","errorMessage":"[B:2] 그룹 등록은(는) 존재하지 않는 그룹 입니다."},{"columnProperty":{"displayName":"그룹 등록","columnName":"userGroup","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"createUserId","foreignKey":true},"row":"2","column":"C","data":"사용자 그룹2","errorMessage":"[C:2] 그룹 등록은(는) 존재하지 않는 그룹 입니다."},{"columnProperty":{"displayName":"그룹 등록","columnName":"userGroup","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"createUserId","foreignKey":true},"row":"2","column":"D","data":"사용자 그룹3","errorMessage":"[D:2] 그룹 등록은(는) 존재하지 않는 그룹 입니다."},{"columnProperty":{"displayName":"그룹 등록","columnName":"userGroup","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"createUserId","foreignKey":true},"row":"3","column":"B","data":"사용자 그룹4","errorMessage":"[B:3] 그룹 등록은(는) 존재하지 않는 그룹 입니다."}];
 
-	let errors = [
-		{"row" : "2", "column" : "A", "errorMessage" : "양식에 맞지 않습니다"},
-		{"row" : "3", "column" : "B", "errorMessage" : "양식에 맞지 않습니다"},
-		{"row" : "4", "column" : "C", "errorMessage" : "양식에 맞지 않습니다"},
-		{"row" : "4", "column" : "F", "errorMessage" : "양식에 맞지 않습니다"}
-	]
+	let errors3 = [{"columnProperty":{"displayName":"계정 명","columnName":"createUserId","dataType":"STRING","columnHandler":{},"unique":true,"columnkey":"","foreignKey":false},"row":"2","column":"A","data":"account1","errorMessage":"[A:2] 계정 명은(는) 이미 등록된 계정 입니다."},{"columnProperty":{"displayName":"그룹 등록","columnName":"userGroup","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"createUserId","foreignKey":true},"row":"2","column":"B","data":"사용자 그룹1","errorMessage":"[B:2] 그룹 등록은(는) 존재하지 않는 그룹 입니다."},{"columnProperty":{"displayName":"그룹 등록","columnName":"userGroup","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"createUserId","foreignKey":true},"row":"2","column":"C","data":"사용자 그룹2","errorMessage":"[C:2] 그룹 등록은(는) 존재하지 않는 그룹 입니다."},{"columnProperty":{"displayName":"그룹 등록","columnName":"userGroup","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"createUserId","foreignKey":true},"row":"2","column":"D","data":"사용자 그룹3","errorMessage":"[D:2] 그룹 등록은(는) 존재하지 않는 그룹 입니다."},{"columnProperty":{"displayName":"그룹 등록","columnName":"userGroup","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"createUserId","foreignKey":true},"row":"3","column":"B","data":"사용자 그룹4","errorMessage":"[B:3] 그룹 등록은(는) 존재하지 않는 그룹 입니다."}]
 
 $(document).ready(function() {
 	excelTable.init({
@@ -121,9 +82,9 @@ $(document).ready(function() {
 		//targetObj : $("#targetTable2").get(0),
 		visibleUnique : true, 
 		data : {
-			header : header,
-			origin : origin1,
-			errors : errors,
+			header : header2,
+			origin : origin2,
+			errors : errors2,
 		}
 	});
 
@@ -132,9 +93,9 @@ $(document).ready(function() {
 		targetObj : $("#targetTable3").get(0),
 		visibleUnique : false, 
 		data : {
-			header : header,
-			origin : origin2,
-			errors : errors,
+			header : header3,
+			origin : origin3,
+			errors : errors3,
 		},
 		style : {
 			edge : {
