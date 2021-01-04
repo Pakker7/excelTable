@@ -140,7 +140,7 @@
                     let mainColumnKeyTd = mainSheetTrElement.querySelectorAll("td")[mainSheetColumn];
                     if (mainColumnKeyTd.innerText.indexOf(subColumnkey) != -1) {
 
-                        let subSheetFrame = "<span class='glyphicon glyphicon-eye-open btn-popover' aria-hidden='true' data-toggle='popover'"
+                        let subSheetFrame = "<span class='glyphicon glyphicon-link btn-popover' aria-hidden='true' data-toggle='popover'"
                             + "data-original-title='서브 시트' data-content='"
                                 + "<div class=list-group>"
                                     + '<table class=table>'
@@ -347,9 +347,9 @@
 
             for (let i = 0; i <= objlength; i++) {
                 let excelTd = excelColumn.insertCell();
-                if (i == 0) {
-                    excelTd.style.width = '5%';
-                }
+                // if (i == 0) {
+                //     excelTd.style.width = '5%';
+                // }
                 that.settings(excelTd, 'ev-column', alphabetAry[i]);
                 that.designStyle(excelTd, this.object.style.edge);
 

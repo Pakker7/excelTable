@@ -39,8 +39,9 @@ table .list-group{max-height: 300px; margin-bottom: 10px; overflow:auto; -webkit
 table .color-blue{color:#209bde!important;}
 
 .popover-content {overflow:visible!important; width:900px!important; max-width: 1000px!important;}
-.popover-content table thead tr .ev-displayName {width:1%!important;}
+.popover-content table thead tr .ev-displayName {}
 .popover-content table thead tr .ev-column {width:1%!important;}
+.popover-content table thead tr .ev-row {width:10px!important;}
 /*table thead tr .ev-ellipsis {text-overflow: ellipsis;white-space: nowrap; overflow: hidden; max-width: 0;}*/
 table thead tr .ev-ellipsis {text-overflow: ellipsis;}
 .popover-content .list-group{height:150px!important;}
