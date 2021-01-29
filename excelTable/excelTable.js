@@ -14,13 +14,13 @@
             }
 
             this.object = $.extend(true, this.getDefaultStructure(obj), obj);
-            
+
             this.target = this.targetInit();
             let thead = this.target.querySelector("thead");
             let tbody = this.target.querySelector("tbody");
 
             if (Array.isArray(obj.data)) { // 배열 형태로 input 될 경우 에러 표시가 없는 간단한 형태의 엑셀이 출력된다.
-                this.simpleInitSheet(thead, tbody, this.object.data);
+                this.simpleInitSheet(thead, tbody, this.object.data); //TODO simpleSetHeader가 추가되서 수정이 필요함
 
             } else {
 
@@ -38,11 +38,12 @@
                 let subSheetThead = subSheetTarget.querySelector("thead");
                 let subSheetTbody = subSheetTarget.querySelector("tbody");
 
+                this.simpleSetHeader(subSheetThead, subSheetObject.data.headerAry, subSheetObject.data.origin);
                 this.simpleInitSheet(subSheetThead, subSheetTbody, subSheetObject.data.origin);
-                this.setError(subSheetTarget, subSheetTbody, false);
                 
                 let subSheetErrors = this.categorizationErros(false);
-                this.settingSubSheetError(tbody, subSheetErrors)
+                this.subSheetSetError(subSheetObject, subSheetErrors);
+                this.settingSubSheetError(tbody, subSheetErrors);
 
                 let subSheetHtml = $('#' + this.subSheetTmpId).html();
                 this.connectSubSheetToMainSheet(subSheetObject, subSheetHtml, tbody);
@@ -50,9 +51,82 @@
             }
         },
 
+        subSheetSetError : function (subSheetObject, subSheetErrors) {
+            let that = this;
+            subSheetErrors.forEach(function (errorMsg, index) {
+                //1. 시트 별 데이터에서 실제 데이터 값(계정명, 본인 값)을 얻어온다
+                let errorOriginData = that.getOriginData(subSheetObject, errorMsg);
+
+                // //2. 1번 데이터를 사용하여 그림 그린 서브시트의 실제 위치를 찾는다
+                let location = that.getSubSheetLocation(errorOriginData);
+
+                // // 3. 에러 메세지의 row, column을 임의로 그린 서브시트로 바꾼다.
+                errorMsg.column = location.column;
+                errorMsg.row = location.row;
+            });
+
+            //4. error 표기를 한다.
+            let target = document.getElementById(this.subSheetTmpId);
+            let body = target.querySelector('tbody');
+            that.setError(target, body, false); 
+        },
+
+        getOriginData : function (subSheetObject, errorMsg) {
+            let errorOriginData = {};
+            
+            this.object.data.excelData.forEach(function (sheetElement) {
+                let columnkey = '';
+                let columnName = '';
+
+                if (sheetElement.sheetNum === errorMsg.sheet.num) {
+                    subSheetObject.data.header.forEach(function (headerElement) { //TODO sheet 여러개일때 수정해야 함
+                        if (!headerElement.unique) {
+                            columnkey = headerElement.columnkey; // ex.createUserId
+                            columnName = headerElement.columnName; // ex.userGroup
+                            return true;
+                        }
+                    });
+
+                    errorOriginData.columnkey = sheetElement.origin[errorMsg.row - 2].A; // ex.account1
+                    errorOriginData.columnValue =  errorMsg.data; // ex. 임시그룹1
+                }
+            });
+
+            return errorOriginData;
+        },
+
+        getSubSheetLocation : function (errorOriginData) {
+            //ex. errorOriginData = {columnkey : 'account1', columnValue : '임시그룹1'};
+            let that = this;
+            let row = 0;
+            let column = '';
+
+            document.getElementById(this.subSheetTmpId).querySelectorAll('tbody tr').forEach(function (trElement, trIndex) {
+                let tdAry = trElement.querySelectorAll('td')[1];
+                if (tdAry.innerText === errorOriginData.columnkey) {
+                    row = trIndex + 2; // 상위에 알파벳, ABC..와 index가 있음
+                    return false;
+                }                
+            });
+
+            document.getElementById(this.subSheetTmpId).querySelectorAll('tbody tr').forEach(function (trElement) {
+                let tdAry = trElement.querySelectorAll('td');
+                tdAry.forEach(function(element, index) {
+                    if (element.innerText === errorOriginData.columnValue) {
+                        column = that.getColumnAlphabet(index);
+                        return false;
+                    }
+                });
+            });
+
+            let location = {row : row, column : column};
+            return location;
+        },
+
         // 서브 시트에 에러가 있으면 해당하는 주시트의 edge와 td 색을 추가적으로 변경하는 함수
         // TODO 서브시트 에러 표기하는 함수랑 합치던가....? 구조를 다시 짜던가..  리펙토링하기
         settingSubSheetError : function(body, subSheetErrors) {
+
             let that = this;
             // 1. 서브시트 에러의 column과 row를 구해서 object에 추가한다.
             // 서브시트에서 row가 같으면 동일한 컬럼에 연결되는 값이므로 row 기준으로 데이터를 묶는다.
@@ -62,6 +136,7 @@
                 if (result[element.row] != null) {
                     rowArray = result[element.row];
                 }
+
                 rowArray.push(element);
                 result[element.row] = rowArray;
 
@@ -72,14 +147,15 @@
 
             // 2. 매칭되는 주 시트의 column과 row를 구한다.
             // column 구하기
-            errorArrayByRow.forEach(function(headerElement) {
+            errorArrayByRow.forEach(function(rowElement) {
                 that.object.data.header.forEach(function (element, index) {
-                    if (headerElement[0].columnProperty.columnkey === element.columnName) {
-                        headerElement.originColumn = that.getAlphabetColumn(that.object.data.header, index + 1); // 엑셀 알파벳 첫 column은 비었으므로 +1 해준다;
+                    if (rowElement[0].columnProperty.columnkey === element.columnName) {
+                        rowElement.originColumn = that.getColumnAlphabet(index + 1); // 엑셀 알파벳 첫 column은 비었으므로 +1 해준다;
                         return false;
                     }
                 });
             });
+
 
             // row 구하기
             let kindOfSubSheetSet = new Set(); // 서브 시트 종류 구하기
@@ -96,64 +172,62 @@
                         return (array.length -1 === index) ? data : data + ',';
                     },'');
 
-                    that.object.data.origin.forEach(function (element, index) {
+                    console.log('--------------------')
+                    console.log(subSheetDataByRow)
+
+                    that.object.data.origin.some(function (element, index) {
+
                         if (element[setData].trim() !== ''
-                            && element[setData].indexOf(subSheetDataByRow) != -1){
+                            && element[setData].indexOf(subSheetDataByRow) != -1) {
                             arrayElement.originRow = index + 2; // row는 첫칸비어있고 둘째칸은 header임
-                            return false;
+                            return true;
                         }
                     });
                 });
             });
 
-            // 3. 주 시트 td와 edge 에러 표기 
+            // 3. 주 시트 td와 edge 에러 표기
             errorArrayByRow.forEach(function (rowElement) {
-                let errorData = that.findTd(body, rowElement.originRow, rowElement.originColumn, true);
+                let errorData = that.findTd(body, rowElement.originRow, rowElement.originColumn);
                 that.designStyle(errorData, that.object.style.error, true);
-                that.setErrorEdge(that.target, body, rowElement.originRow, rowElement.originColumn, true);
+                that.setErrorEdge(that.target, body, rowElement.originRow, rowElement.originColumn);
             });
         },
 
         connectSubSheetToMainSheet : function(subSheetObject, subSheetHtml, mainSheetTbody) {
             let that = this;
 
-
             let subSheetThead =  document.querySelector('#' + this.subSheetTmpId + ' thead');
             $('#' + this.subSheetTmpId + ' tbody tr').each (function (subSheetIndex, subSheetElement) {
-                if (subSheetIndex === 0) { //displayName이 작성된 첫번째 row는 제외
-                    return;
-                }
-
-                let subColumnkey = $(subSheetElement).find('.ev-cell:eq(0)').text();
                 
+                let subColumnkey = $(subSheetElement).find('.ev-cell:eq(0)').text();
+
                 let mainSheetColumn = '';
                 that.object.data.header.forEach(function (element, index) {
                     if (subSheetObject.data.header[0].columnName === element.columnName) { //subsheet 첫번째 로우에는 columnkey에 해당하는 실제 값이 들어있다.
-                        //mainSheetColumn = that.getAlphabetColumn(that.object.data.header, index + 1);  //알파벳을 구할 때
+                        //mainSheetColumn = that.getColumnAlphabet(index + 1);  //알파벳을 구할 때
                         mainSheetColumn = index + 1; // 인덱스를 구할 때, 엑셀 알파벳 첫 column은 비었으므로 +1 해준다;
                         return false;
                     }
                 });
 
-                
+
                 $(mainSheetTbody).find('tr').each (function (mainSheetIndex, mainSheetTrElement) {
                     let mainColumnKeyTd = mainSheetTrElement.querySelectorAll("td")[mainSheetColumn];
                     if (mainColumnKeyTd.innerText.indexOf(subColumnkey) != -1) {
 
                         let subSheetFrame = "<span class='glyphicon glyphicon-link btn-popover' aria-hidden='true' data-toggle='popover'"
                             + "data-original-title='서브 시트' data-content='"
-                                + "<div class=list-group>"
-                                    + '<table class=table>'
-                                        + '<thead>'+ subSheetThead.innerHTML + '</thead>'
-                                        + '<tbody>'+ subSheetElement.innerHTML + '</tbody>'// 주시트에 연결되는 서브시트 row 만 빼오기
-                                    + '</table>'
-                                + "</div>'></span> &nbsp;"
+                            + "<div class=list-group>"
+                            + '<table class=table>'
+                            + '<thead>'+ subSheetThead.innerHTML + '</thead>'
+                            + '<tbody>'+ subSheetElement.innerHTML + '</tbody>'// 주시트에 연결되는 서브시트 row 만 빼오기
+                            + '</table>'
+                            + "</div>'></span> &nbsp;"
                         that.settings(mainColumnKeyTd, 'ev-error', subSheetFrame + mainColumnKeyTd.innerHTML, true);
                     }
                 });
-
             });
-
             this.popoverSetting(mainSheetTbody);
             $('#' + this.subSheetTmpId).remove();
 
@@ -166,26 +240,27 @@
         },
 
         makeSubSheetObject : function() {
+            let that = this;
+
             let subSheetHeader = this.object.data.header.reduce (function (acc, element) {
                 if (element.foreignKey === true) {
                     acc.push(element);
                 }
-                return acc; 
+                return acc;
             },[] );
 
             this.object.data.header.forEach(function (element) { // 서브시트에 연결되는 값을 찾아서 header에 추가
                 if (element.columnName === subSheetHeader[0].columnkey) {
                     subSheetHeader.unshift(element);
-                    return; 
+                    return;
                 }
             });
 
-            let subSheetErrors = this.object.data.errors.reduce(function (acc, element) {
-                if (element.columnProperty.foreignKey) {
-                    acc.push(element);
-                }
+            let arrayHeader = subSheetHeader.reduce (function (acc,element) { 
+                acc.push(element.displayName)
                 return acc;
             },[] );
+
 
             let subSheetOrigin = this.object.data.origin.reduce (function (acc, element) {
                 if (element[subSheetHeader[1].columnName]) { //TODO subSheet 여러개일때 추후 수정
@@ -199,17 +274,19 @@
                 return acc;
             },[] );
 
-            let arrayHeader = subSheetHeader.reduce (function (acc,element) {
-                acc.push(element.displayName)
+            let subSheetErrors = this.object.data.errors.reduce(function (acc, element) {
+                if (element.columnProperty.foreignKey) {
+                    acc.push(element);
+                }
                 return acc;
             },[] );
-            subSheetOrigin.unshift(arrayHeader)
 
             let subSheetObject = { data : {
-                        header : subSheetHeader,
-                        origin : subSheetOrigin,
-                        errors : subSheetErrors
-                    }};
+                    header : subSheetHeader,
+                    headerAry : arrayHeader,
+                    origin : subSheetOrigin,
+                    errors : subSheetErrors
+                }};
 
             subSheetObject = $.extend(true, this.getDefaultStructure(subSheetObject), subSheetObject);
             return subSheetObject;
@@ -250,6 +327,11 @@
                     return;
                 }
 
+                if (!obj.data.excelData) {
+                    console.error('excelData는 필수입니다.');
+                    return;
+                }
+
             }
 
             if (obj.hasOwnProperty('targetObj') && typeof obj.targetObj === "array") {
@@ -271,6 +353,7 @@
             if (!Array.isArray(obj.data)) {
                 data = {
                     header: obj.data.header,
+                    excelData : obj.data.excelData,
                     origin: obj.data.origin,
                     errors: obj.data.errors,
                 }
@@ -404,13 +487,12 @@
             let that = this;
 
             let header = thead.querySelectorAll("tr")[1].querySelectorAll("td:not(.ev-row)");
-            
+
             objectData.forEach(function (rowData, idx) {
                 let excelColumn = excelBody.insertRow();
                 that.setNumRow(excelColumn, idx + 2);
-                
-                header.forEach(function (columnsData) {
 
+                header.forEach(function (columnsData) {
                     let excelTd = excelColumn.insertCell();
 
                     let className = (columnsData.dataset.dataType.toUpperCase() === 'NUMBER') ? 'text-right ev-ellipsis ev-cell' : 'text-left ev-ellipsis ev-cell';
@@ -422,9 +504,20 @@
             });
         },
 
-        getAlphabetColumn : function(header, index ) {
-            let alphabetAry = this.makeAlphabet(this.getHeaderLength(header))
-            return alphabetAry[index];
+        // 전달 된 index로 알파벳 값을 알아냄
+        getColumnAlphabet : function(index) {
+            return this.makeAlphabet(index)[index];
+        },
+
+        // 전달 된 alphabet의 ascii code 값을 빼서 몇번째 알파벳인지 index를 알아냄
+        getColumnIndex : function(alphabet) {
+            let pattern = /^[a-zA-Z]+$/;
+            if (!pattern.test(alphabet)){
+                console.error('(' + alphabet +') 은 알파벳이 아닙니다.');
+                return;
+            }
+
+            return alphabet.toUpperCase().charCodeAt() - 64; // A == 64;
         },
 
         categorizationErros : function(isNomalErros){
@@ -450,14 +543,15 @@
 
         setError: function (target, body, isNomalErros) {
             let mainSheetErrorORsubSheetError = this.categorizationErros(isNomalErros);
-            this.settingError(target, body, mainSheetErrorORsubSheetError, isNomalErros);
+            this.settingError(target, body, mainSheetErrorORsubSheetError);
             this.setErrorTooltipTdLast(body, isNomalErros);// 마지막 에러 표시가 화면을 넘어가지 않게함
         },
 
-        settingError : function(target, body, errors, isNomalErros) {
+        settingError : function(target, body, errors) {
             let that = this;
+
             errors.forEach(function (element) {
-                let errorData = that.findTd(body, element.row, element.column, isNomalErros);
+                let errorData = that.findTd(body, element.row, element.column);
 
                 //TODO tooltip에서 glyphicon-warning-sign에만 hover시에 tooltip이 나오는 걸로 수정?
                 let errorIcon = '<span class="glyphicon glyphicon-warning-sign" style="color:yellow;">&nbsp;</span>';
@@ -469,7 +563,7 @@
                 that.designStyle(errorData, that.object.style.error, true);
 
                 errorData.innerHTML = errorData.innerHTML + '<span class="ev-tooltip">' + element.errorMessage + '</span>';
-                that.setErrorEdge(target, body, element.row, element.column, isNomalErros);
+                that.setErrorEdge(target, body, element.row, element.column);
             });
         },
 
@@ -480,7 +574,7 @@
             $(body).find('tr').each(function (index, item) {
                 if (isNomalErros) {
                     let replaceClass = $(item).find('td:last').html().replace('ev-tooltip', 'ev-tooltip-side');
-                    $(item).find('td:last').html(replaceClass);    
+                    $(item).find('td:last').html(replaceClass);
 
                 } else {
 
@@ -491,29 +585,18 @@
                         });
                     });
                 }
-                
+
             });
         },
 
         simpleInitSheet: function (thead, excelBody, objectData) {
             let that = this;
-
-            let headerLength = objectData.reduce(function (maxLength, element, index, array) {
-                if (index == objectData.length - 1) {
-                    let maxLengthIdx = element.length > array[maxLength].length ? index : maxLength
-                    return array[maxLengthIdx].length;
-                }
-                return element.length > array[maxLength].length ? index : maxLength;
-            }, 0);
-
-
-            this.setEdge(thead, headerLength);
             objectData.forEach(function (rowData, idx) {
                 let excelColumn = excelBody.insertRow();
-                that.setNumRow(excelColumn, idx + 1);
+                that.setNumRow(excelColumn, idx + 2);
 
-                // 인스턴스 추가
-                for (let i = 0; i < headerLength; i++) {
+                let length = that.simpleGetLength(objectData); 
+                for (let i = 0; i < length; i++) {
                     let excelTd = excelColumn.insertCell();
                     let className = 'text-left ev-ellipsis ev-cell';
                     let innerHtml = rowData[i] === undefined ? '' : rowData[i];
@@ -523,6 +606,35 @@
                 }
 
             });
+        },
+
+        simpleSetHeader : function (thead, header, objectData) {
+            let that = this;        
+            let length = this.simpleGetLength(objectData); // origin 데이터의 사이즈에 따라 총 길이가 정해진다
+            this.setEdge(thead, length);
+
+            let excelColumn = thead.insertRow();
+            this.setNumRow(excelColumn, 1); 
+
+            for (let i = 0; i < length; i++) {
+                let excelTd = excelColumn.insertCell();
+                let className = 'ev-displayName';
+                let innerHtml = header[i] === undefined ? '' : header[i];
+
+                that.settings(excelTd, className, innerHtml);
+                that.designStyle(excelTd, that.object.style.cell);
+            }
+
+        },
+
+        simpleGetLength : function (objectData) {
+            return objectData.reduce(function (maxLength, element, index, array) {
+                if (index == objectData.length - 1) {
+                    let maxLengthIdx = element.length > array[maxLength].length ? index : maxLength
+                    return array[maxLengthIdx].length;
+                }
+                return element.length > array[maxLength].length ? index : maxLength;
+            }, 0);
         },
 
         settings: function (excelTd, className, innerHtml, isError) {
@@ -547,26 +659,17 @@
 
         },
 
-        // 전달 된 alphabet의 ascii code 값을 빼서 몇번째 알파벳인지 알아냄
-        getAlphabetOrder : function(alphabet){
-            let pattern = /^[a-zA-Z]+$/;
-            if (!pattern.test(alphabet)){
-                console.error('(' + alphabet +') 은 알파벳이 아닙니다.');
-                return;
-            }
+        findTd: function (body, row, column) {
+            let index = 2;
+            let columnResult = this.getColumnIndex(column);
 
-            return alphabet.toUpperCase().charCodeAt() - 64; // A == 64;
-        },
-
-        findTd: function (body, row, column, isNomalErros) {
-            let index = isNomalErros ? 2 : 1;
-            let columnResult = this.getAlphabetOrder(column);
             return body.querySelectorAll("tr")[row - index].querySelectorAll("td")[columnResult];
         },
 
-        setErrorEdge: function (target, body, row, column, isNomalErros) {
-            let index = isNomalErros ? 2 : 1;
-            let columnResult = this.getAlphabetOrder(column);
+        setErrorEdge: function (target, body, row, column) { 
+            let index = 2;
+            let columnResult = this.getColumnIndex(column);
+
             target.querySelector("thead tr").querySelectorAll('td')[columnResult].style.backgroundColor = this.object.style.error.backgroundColor;
             body.querySelectorAll("tr")[row - index].querySelector(".ev-row").style.backgroundColor = this.object.style.error.backgroundColor;
         },

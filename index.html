@@ -56,26 +56,30 @@
 
 	let header3 = [{"displayName":"계정 명","columnName":"createUserId","dataType":"STRING","columnHandler":{},"unique":true,"columnkey":"","foreignKey":false},{"displayName":"권한","columnName":"userGradeFormat","dataType":"NUMBER","columnHandler":{},"unique":false,"columnkey":"","foreignKey":false},{"displayName":"이름","columnName":"userName","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"","foreignKey":false},{"displayName":"부서","columnName":"userClass","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"","foreignKey":false},{"displayName":"이메일","columnName":"email","dataType":"LINK","columnHandler":{},"unique":false,"columnkey":"","foreignKey":false},{"displayName":"연락처","columnName":"phone","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"","foreignKey":false},{"displayName":"계정 활성화","columnName":"activation","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"","foreignKey":false},{"displayName":"그룹 등록","columnName":"userGroup","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"createUserId","foreignKey":true}];
 
-	let origin2 = [{"createUserId":"account1","userClass":"부서1","phone":"010-1234-5678","userGradeFormat":"1","activation":"Y","userName":"이름1","userGroup":"사용자 그룹1,사용자 그룹2,사용자 그룹3","email":"itnomads1@itnomads.com"},{"createUserId":"account2","userClass":"부서2","phone":"010-1234-5678","userGradeFormat":"2","activation":"N","userName":"이름2","userGroup":"사용자 그룹4","email":"itnomads2@itnomads.com"},{"createUserId":"account3","userClass":"부서3","phone":"010-1234-5678","userGradeFormat":"3","activation":"Y","userName":"이름3","userGroup":"","email":"itnomads3@itnomads.com"}];
+	let origin2 = [{"createUserId":"account1","userClass":"부서1","phone":"010-1234-5678","userGradeFormat":"1","activation":"1","userName":"이름1","userGroup":"테스트1","email":"itnomads1@itnomads.com"},{"createUserId":"account2","userClass":"부서2","phone":"010-1234-5678","userGradeFormat":"2","activation":"N","userName":"이름2","userGroup":"테스트1,dd그룹1,aatest2","email":"itnomads2@itnomads.com"},{"createUserId":"account3","userClass":"부서3","phone":"010-1234-5678","userGradeFormat":"3","activation":"Y","userName":"이름3","userGroup":"","email":"itnomads3@itnomads.com"}];
 
 
 	let origin3 = [{"createUserId":"account1","userClass":"부서1","phone":"010-1234-5678","userGradeFormat":"1","activation":"Y","userName":"이름1","userGroup":"사용자 그룹1,사용자 그룹2,사용자 그룹3","email":"itnomads1@itnomads.com"},{"createUserId":"account2","userClass":"부서2","phone":"010-1234-5678","userGradeFormat":"2","activation":"N","userName":"이름2","userGroup":"사용자 그룹4","email":"itnomads2@itnomads.com"},{"createUserId":"account3","userClass":"부서3","phone":"010-1234-5678","userGradeFormat":"3","activation":"Y","userName":"이름3","userGroup":"","email":"itnomads3@itnomads.com"}];
 
-	let errors2 = [{"columnProperty":{"displayName":"계정 명","columnName":"createUserId","dataType":"STRING","columnHandler":{},"unique":true,"columnkey":"","foreignKey":false},"row":"2","column":"A","data":"account1","errorMessage":"[A:2] 계정 명은(는) 이미 등록된 계정 입니다."},{"columnProperty":{"displayName":"그룹 등록","columnName":"userGroup","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"createUserId","foreignKey":true},"row":"2","column":"B","data":"사용자 그룹1","errorMessage":"[B:2] 그룹 등록은(는) 존재하지 않는 그룹 입니다."},{"columnProperty":{"displayName":"그룹 등록","columnName":"userGroup","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"createUserId","foreignKey":true},"row":"2","column":"C","data":"사용자 그룹2","errorMessage":"[C:2] 그룹 등록은(는) 존재하지 않는 그룹 입니다."},{"columnProperty":{"displayName":"그룹 등록","columnName":"userGroup","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"createUserId","foreignKey":true},"row":"2","column":"D","data":"사용자 그룹3","errorMessage":"[D:2] 그룹 등록은(는) 존재하지 않는 그룹 입니다."},{"columnProperty":{"displayName":"그룹 등록","columnName":"userGroup","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"createUserId","foreignKey":true},"row":"3","column":"B","data":"사용자 그룹4","errorMessage":"[B:3] 그룹 등록은(는) 존재하지 않는 그룹 입니다."}];
+	let errors2 = [{"columnProperty":{"displayName":"계정 활성화","columnName":"activation","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"","foreignKey":false},"row":"2","column":"G","data":"1","sheet":{"num":1,"name":"계정 등록"},"errorMessage":"[G:2] 계정 활성화 -> (Y/N/Y/N ) 만 가능합니다"},{"columnProperty":{"displayName":"그룹 등록","columnName":"userGroup","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"createUserId","foreignKey":true},"row":"4","column":"B","data":"테스트1","sheet":{"num":2,"name":"그룹 등록"},"errorMessage":"[B:4] 그룹 등록 -> 존재하지 않는 그룹 입니다."},{"columnProperty":{"displayName":"그룹 등록","columnName":"userGroup","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"createUserId","foreignKey":true},"row":"2","column":"B","data":"테스트1","sheet":{"num":2,"name":"그룹 등록"},"errorMessage":"[B:2] 그룹 등록 -> 존재하지 않는 그룹 입니다."},{"columnProperty":{"displayName":"그룹 등록","columnName":"userGroup","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"createUserId","foreignKey":true},"row":"2","column":"C","data":"dd그룹1","sheet":{"num":2,"name":"그룹 등록"},"errorMessage":"[C:2] 그룹 등록 -> 존재하지 않는 그룹 입니다."},{"columnProperty":{"displayName":"그룹 등록","columnName":"userGroup","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"createUserId","foreignKey":true},"row":"2","column":"D","data":"aatest2","sheet":{"num":2,"name":"그룹 등록"},"errorMessage":"[D:2] 그룹 등록 -> 존재하지 않는 그룹 입니다."}];
 
-	let errors3 = [{"columnProperty":{"displayName":"계정 명","columnName":"createUserId","dataType":"STRING","columnHandler":{},"unique":true,"columnkey":"","foreignKey":false},"row":"2","column":"A","data":"account1","errorMessage":"[A:2] 계정 명은(는) 이미 등록된 계정 입니다."},{"columnProperty":{"displayName":"그룹 등록","columnName":"userGroup","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"createUserId","foreignKey":true},"row":"2","column":"B","data":"사용자 그룹1","errorMessage":"[B:2] 그룹 등록은(는) 존재하지 않는 그룹 입니다."},{"columnProperty":{"displayName":"그룹 등록","columnName":"userGroup","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"createUserId","foreignKey":true},"row":"2","column":"C","data":"사용자 그룹2","errorMessage":"[C:2] 그룹 등록은(는) 존재하지 않는 그룹 입니다."},{"columnProperty":{"displayName":"그룹 등록","columnName":"userGroup","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"createUserId","foreignKey":true},"row":"2","column":"D","data":"사용자 그룹3","errorMessage":"[D:2] 그룹 등록은(는) 존재하지 않는 그룹 입니다."},{"columnProperty":{"displayName":"그룹 등록","columnName":"userGroup","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"createUserId","foreignKey":true},"row":"3","column":"B","data":"사용자 그룹4","errorMessage":"[B:3] 그룹 등록은(는) 존재하지 않는 그룹 입니다."}]
+	let errors3 = [{"columnProperty":{"displayName":"계정 명","columnName":"createUserId","dataType":"STRING","columnHandler":{},"unique":true,"columnkey":"","foreignKey":false},"row":"2","column":"A","data":"account1","errorMessage":"[A:2] 계정 명은(는) 이미 등록된 계정 입니다."},{"columnProperty":{"displayName":"그룹 등록","columnName":"userGroup","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"createUserId","foreignKey":true},"row":"2","column":"B","data":"사용자 그룹1","errorMessage":"[B:2] 그룹 등록은(는) 존재하지 않는 그룹 입니다."},{"columnProperty":{"displayName":"그룹 등록","columnName":"userGroup","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"createUserId","foreignKey":true},"row":"2","column":"C","data":"사용자 그룹2","errorMessage":"[C:2] 그룹 등록은(는) 존재하지 않는 그룹 입니다."},{"columnProperty":{"displayName":"그룹 등록","columnName":"userGroup","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"createUserId","foreignKey":true},"row":"2","column":"D","data":"사용자 그룹3","errorMessage":"[D:2] 그룹 등록은(는) 존재하지 않는 그룹 입니다."},{"columnProperty":{"displayName":"그룹 등록","columnName":"userGroup","dataType":"STRING","columnHandler":{},"unique":false,"columnkey":"createUserId","foreignKey":true},"row":"3","column":"B","data":"사용자 그룹4","errorMessage":"[B:3] 그룹 등록은(는) 존재하지 않는 그룹 입니다."}];
+
+	let excelData2 = [{"origin":[{"createUserId":"account1","userClass":"부서1","phone":"010-1234-5678","userGradeFormat":"1","activation":"1","userName":"이름1","userGroup":"테스트1","email":"itnomads1@itnomads.com"},{"createUserId":"account2","userClass":"부서2","phone":"010-1234-5678","userGradeFormat":"2","activation":"N","userName":"이름2","userGroup":"테스트1,dd그룹1,aatest2","email":"itnomads2@itnomads.com"},{"createUserId":"account3","userClass":"부서3","phone":"010-1234-5678","userGradeFormat":"3","activation":"Y","userName":"이름3","userGroup":"","email":"itnomads3@itnomads.com"}],"sheetName":"계정 등록","sheetNum":1},{"origin":[{"A":"account2","B":"테스트1","C":"dd그룹1","D":"aatest2"},{"A":"noneId","B":"테스트1","C":"dd그룹1","D":"aatest2"},{"A":"account1","B":"테스트1","C":"","D":""}],"sheetName":"그룹 등록","sheetNum":2}]
+
+
 
 $(document).ready(function() {
-	excelTable.init({
-		target : "targetTable1", 
-		//targetObj : $("#targetTable2").get(0),
-		visibleUnique : true, 
-		data : [
-			["네이버","7","그룹1","그룹2","그룹3"], 
-			["다음","10","그룹1","그룹2","그룹3","도메인"], 
-			["구글","15","그룹1","그룹2","그룹3","도메인"], 
-		]
-	});
+	// excelTable.init({
+	// 	target : "targetTable1", 
+	// 	//targetObj : $("#targetTable2").get(0),
+	// 	visibleUnique : true, 
+	// 	data : [
+	// 		["네이버","7","그룹1","그룹2","그룹3"], 
+	// 		["다음","10","그룹1","그룹2","그룹3","도메인"], 
+	// 		["구글","15","그룹1","그룹2","그룹3","도메인"], 
+	// 	]
+	// });
 
 	excelTable.init({
 		target : "targetTable2", 
@@ -84,34 +88,35 @@ $(document).ready(function() {
 		data : {
 			header : header2,
 			origin : origin2,
+			excelData : excelData2,
 			errors : errors2,
 		}
 	});
 
-	excelTable.init({
-		//target : "targetTable2", 
-		targetObj : $("#targetTable3").get(0),
-		visibleUnique : false, 
-		data : {
-			header : header3,
-			origin : origin3,
-			errors : errors3,
-		},
-		style : {
-			edge : {
-				fontColor : '#4a4a4a', fontSize : '15px', backgroundColor: 'rgb(207, 203, 203)'
-			},
-			header : {
-				backgroundColor  : '#7676ff', fontColor : 'white'
-			},
-			cell :{
-				backgroundColor  : '#b7b7f8' , fontColor : 'white'
-			},
-			error :{
-				warnColor : '#333333', fontColor : 'white'
-			}
-		}		
-	});
+	// excelTable.init({
+	// 	//target : "targetTable2", 
+	// 	targetObj : $("#targetTable3").get(0),
+	// 	visibleUnique : false, 
+	// 	data : {
+	// 		header : header3,
+	// 		origin : origin3,
+	// 		errors : errors3,
+	// 	},
+	// 	style : {
+	// 		edge : {
+	// 			fontColor : '#4a4a4a', fontSize : '15px', backgroundColor: 'rgb(207, 203, 203)'
+	// 		},
+	// 		header : {
+	// 			backgroundColor  : '#7676ff', fontColor : 'white'
+	// 		},
+	// 		cell :{
+	// 			backgroundColor  : '#b7b7f8' , fontColor : 'white'
+	// 		},
+	// 		error :{
+	// 			warnColor : '#333333', fontColor : 'white'
+	// 		}
+	// 	}		
+	// });
 
 });
 
