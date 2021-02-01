@@ -28,17 +28,18 @@ h3 {font-weight: bold;}
     border-style:solid;border-width:1px;border-color:red;padding:3px;color:red;top:-10px;left:20px;
 }
 
-.ev-error:hover span.ev-tooltip{ display:block;}
-.ev-error:hover span.ev-tooltip-side{ display:block;}
+.warn-sign{display:inline-block; position: relative!important;}
+.warn-sign:hover span.ev-tooltip{display:block;}
+.warn-sign:hover span.ev-tooltip-side{display:block;}
 
 /* popover */
 table .btn-popover{cursor: pointer; font-size: 14; vertical-align:middle;}
-table .popover{position: absolute!important; padding: 5px; max-width:none; }
+table .popover{position: absolute!important; padding: 5px; max-width:none;}
 table .popover-title{color:#747378;}
 table .list-group{max-height: 300px; margin-bottom: 10px; overflow:auto; -webkit-overflow-scrolling: touch; color:#747378;}
 table .color-blue{color:#209bde!important;}
 
-.popover-content {overflow:visible!important; width:900px!important; max-width: 1000px!important;}
+.popover-content {overflow:visible!important; width:1450px!important; max-width: 1450px!important;}
 .popover-content table thead tr .ev-displayName {}
 .popover-content table thead tr .ev-column {width:1%!important;}
 .popover-content table thead tr .ev-row {width:10px!important;}
@@ -48,12 +49,12 @@ table thead tr .ev-ellipsis {text-overflow: ellipsis;}
 .popover-content .ev-tooltip {
     display:none;position:absolute!important;
     z-index:100!important;border:1px;
-    background-color:white;text-align: left!important; width:280px;
+    background-color:white;text-align: left!important;
     border-style:solid;border-width:1px;border-color:red;padding:3px;color:red;left:0px;top:30px!important;
 }
 .popover-content .ev-tooltip-side { 
     display:none;position:absolute!important;
     z-index:100!important;border:1px;
-    background-color:white;text-align: left!important;width:100%;
+    background-color:white;text-align: left!important;
     border-style:solid;border-width:1px;border-color:red;padding:3px;color:red;left:0px;top:30px!important
 }
