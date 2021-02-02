@@ -215,6 +215,7 @@
 
                 $(mainSheetTbody).find('tr').each (function (mainSheetIndex, mainSheetTrElement) {
                     let mainColumnKeyTd = mainSheetTrElement.querySelectorAll("td")[mainSheetColumn];
+                    
                     if (mainColumnKeyTd.innerText.indexOf(subColumnkey) != -1) {
 
                         let subSheetFrame = "<span class='glyphicon glyphicon-link btn-popover' aria-hidden='true' data-toggle='popover'"
@@ -543,11 +544,11 @@
 
         setError: function (target, body, isNomalErros) {
             let mainSheetErrorORsubSheetError = this.categorizationErros(isNomalErros);
-            this.settingError(target, body, mainSheetErrorORsubSheetError);
+            this.settingError(target, body, mainSheetErrorORsubSheetError, isNomalErros);
             this.setErrorTooltipTdLast(body, isNomalErros);// 마지막 에러 표시가 화면을 넘어가지 않게함
         },
 
-        settingError : function(target, body, errors) {
+        settingError : function(target, body, errors, isNomalErros) {
             let that = this;
 
             errors.forEach(function (element) {
@@ -561,7 +562,11 @@
                 that.designStyle(errorData, that.object.style.error, true);
 
                 errorData.querySelector('.warn-sign').innerHTML += '<span class="ev-tooltip">' + element.errorMessage + '</span>'; 
-                that.setErrorEdge(target, body, element.row, element.column);
+
+                if(isNomalErros){
+                    that.setErrorEdge(target, body, element.row, element.column);    
+                }
+                
             });
         },
 
