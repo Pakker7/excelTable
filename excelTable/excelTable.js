@@ -28,7 +28,7 @@
                 this.setHeader(this.object.data.header, thead);
                 this.initSheet(thead, tbody, this.object.data.origin);
                 if (this.object.data.errors && this.object.data.errors.length > 0) {
-                    this.setError(this.target, tbody, true);
+                    this.setError(this.target, tbody, true, this.object.callbackError);
                 }
 
                 // 서브 시트
@@ -51,10 +51,7 @@
                         }
                         subSheetHtmlAry.push($('#' + that.subSheetTmpId).html())
                     }
-
-                //let subSheetHtml = $('#' + this.subSheetTmpId).html();
-                //this.connectSubSheetToMainSheet(subSheetObject, subSheetHtml, tbody);
-                this.connectSubSheetToMainSheet(subSheetObject, subSheetHtmlAry, tbody);
+                    this.connectSubSheetToMainSheet(subSheetObject, subSheetHtmlAry, tbody);
                 }
             }
         },
@@ -131,7 +128,8 @@
                     error: {
                         warnColor: 'yellow', fontColor: "white", backgroundColor: 'rgb(226, 92, 77)', fontSize: '13px'
                     }
-                }
+                },
+                callbackError : null
             };
         },
 
@@ -572,10 +570,14 @@
 
         },
 
-        setError: function (target, body, isNomalErros) {
+        setError: function (target, body, isNomalErros, callback) {
             let mainSheetErrorORsubSheetError = this.categorizationErros(isNomalErros);
             this.settingError(target, body, mainSheetErrorORsubSheetError, isNomalErros);
             this.setErrorTooltipTdLast(body, isNomalErros);// 마지막 에러 표시가 화면을 넘어가지 않게함
+
+            if (typeof callback === "function") {
+                callback();
+            }
         },
 
         settingError : function(target, body, errors, isNomalErros) {
@@ -606,13 +608,8 @@
             $(body).find('tr').each(function (index, item) {
 
                 if (isNomalErros) {
-                    let replaceClass = $(item).find('td:last').html().replace('ev-tooltip', 'ev-tooltip-side');
-                    let width = (Number($(item).find('td:last').css('width').replace('px','')) * 0.8) + 'px';
-                    $(item).find('td:last').html(replaceClass);
-                    $(item).find('td:last .ev-tooltip-side').css('width',width);
-
+                    $(item).find('td:last .ev-tooltip').css('right','99%');
                 } else {
-
                     $(item).each (function (index, element) {
                         let tdArray = $(element).find('td');
                         tdArray.each (function (tdIndex, tdElement) {
@@ -706,7 +703,6 @@
             let index = 2;
             let columnResult = this.getColumnIndex(column);
             target.querySelectorAll("thead tr")[1].querySelectorAll('td')[columnResult].style.backgroundColor = this.object.style.error.backgroundColor;
-            target.querySelectorAll("thead tr")[1].querySelector('td').style.backgroundColor = this.object.style.error.backgroundColor;
             target.querySelector("thead tr").querySelectorAll('td')[columnResult].style.backgroundColor = this.object.style.error.backgroundColor;
             body.querySelectorAll("tr")[row - index].querySelector(".ev-row").style.backgroundColor = this.object.style.error.backgroundColor;
         },

@@ -19,13 +19,7 @@ h3 {font-weight: bold;}
     display:none;position:absolute!important;
     z-index:100!important;border:1px;
     background-color:white;text-align: left!important; width:280px;
-    border-style:solid;border-width:1px;border-color:red;padding:3px;color:red;top:-10px;left:20px;
-}
-.ev-tooltip-side { 
-    display:none;position:absolute!important;
-    z-index:100!important;border:1px;
-    background-color:white;text-align: left!important;
-    border-style:solid;border-width:1px;border-color:red;padding:3px;color:red;top:-10px;left:20px;
+    border-style:solid;border-width:1px;border-color:red;padding:3px;color:red;top:-10px;
 }
 
 .warn-sign{display:inline-block; position: relative!important;}
@@ -50,11 +44,5 @@ table thead tr .ev-ellipsis {text-overflow: ellipsis;}
     display:none;position:absolute!important;
     z-index:100!important;border:1px;
     background-color:white;text-align: left!important;
-    border-style:solid;border-width:1px;border-color:red;padding:3px;color:red;left:0px;top:30px!important;
-}
-.popover-content .ev-tooltip-side { 
-    display:none;position:absolute!important;
-    z-index:100!important;border:1px;
-    background-color:white;text-align: left!important;
-    border-style:solid;border-width:1px;border-color:red;padding:3px;color:red;left:0px;top:30px!important
+    border-style:solid;border-width:1px;border-color:red;padding:3px;color:red;top:30px!important;
 }
