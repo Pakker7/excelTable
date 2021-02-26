@@ -28,7 +28,7 @@
                 this.setHeader(this.object.data.header, thead);
                 this.initSheet(thead, tbody, this.object.data.origin);
                 if (this.object.data.errors && this.object.data.errors.length > 0) {
-                    this.setError(this.target, tbody, true, this.object.callbackError);
+                    this.setError(this.target, tbody, true, this.object.callbackError, this.object.data.header);
                 }
 
                 // 서브 시트
@@ -570,21 +570,31 @@
 
         },
 
-        setError: function (target, body, isNomalErros, callback) {
+        setError: function (target, body, isNomalErros, callback, header) {
             let mainSheetErrorORsubSheetError = this.categorizationErros(isNomalErros);
-            this.settingError(target, body, mainSheetErrorORsubSheetError, isNomalErros);
-            this.setErrorTooltipTdLast(body, isNomalErros);// 마지막 에러 표시가 화면을 넘어가지 않게함
+            this.settingError(target, body, mainSheetErrorORsubSheetError, isNomalErros, header);
+            this.setErrorTooltipTdLast(body, isNomalErros);// 마지막 에러 표시(tooltip)가 화면을 넘어가지 않게함
 
             if (typeof callback === "function") {
                 callback();
             }
         },
 
-        settingError : function(target, body, errors, isNomalErros) {
+        settingError : function(target, body, errors, isNomalErros, header) {
             let that = this;
 
             errors.forEach(function (element) {
-                let errorData = that.findTd(body, element.row, element.column);
+                let column = element.column;
+                if (isNomalErros && header) {
+                    header.forEach(function (headerElement, headerIdx) {
+                        if (element.columnProperty.columnName === headerElement.columnName) {
+                            column = that.getColumnAlphabet(headerIdx + 1)
+                            return true;
+                        }
+                    });
+                }
+
+                let errorData = that.findTd(body, element.row, column);
                 let errorIcon = '<div class=warn-sign><span class="glyphicon glyphicon-warning-sign" style="color:yellow;">&nbsp;</span></div>';
                 if (that.isTextAlignRight(errorData)) {
                     errorIcon = '<div class="ev-warning"><div class=warn-sign><span class="glyphicon glyphicon-warning-sign" style="color:yellow;">&nbsp;</span></div></div>';
@@ -596,21 +606,23 @@
                 errorData.querySelector('.warn-sign').innerHTML += '<span class="ev-tooltip">' + element.errorMessage + '</span>';
 
                 if (isNomalErros) {
-                    that.setErrorEdge(target, body, element.row, element.column);
+                    that.setErrorEdge(target, body, element.row, column);
                 }
 
             });
+
+
+            // });
         },
 
         // 주 시트의 전체 칼럼 중 반절의 칼럼은 왼쪽으로 tooltip이 뜨게함
         // 서브 시트는 모든 컬럼이 레이아웃을 넘어가지 않게 처리함
         setErrorTooltipTdLast: function(body, isNomalErros) {
 
-            let halfNum = $(body).find('tr:first td').size() / 2;
+            let halfNum = Math.ceil($(body).find('tr:first td').size() / 2)
 
             $(body).find('tr').each(function (index, item) {
                 if (isNomalErros) {
-                    
                     $(item).find('td:gt(' + halfNum + ')').each(function (tdIndex, tdElement) {
                         $(tdElement).find('.ev-tooltip').css('right','99%');
                     });
