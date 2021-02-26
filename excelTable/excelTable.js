@@ -32,7 +32,7 @@
                 }
 
                 // 서브 시트
-                if (this.object.data.excelData.length > 1) {
+                if (this.object.data.excelData.length > 1 && this.subSheetValidation()) {
                     this.subSheetTmpId = 'subSheetDefaultStructure';
                     let subSheetObject = this.makeSubSheetObject();
                     let subSheetTarget = this.setSubSheetStructure();
@@ -97,6 +97,23 @@
 
             return true;
 
+        },
+
+        subSheetValidation : function () {
+            let subSheetValidation = true
+            this.object.data.excelData.forEach(function(element, index) {
+                if (index === 0) {
+                    return;
+                }
+
+                if(element.origin[0]) {
+                    subSheetValidation = false;
+                } else if (element.origin[0].A) {
+                    subSheetValidation = false;
+                }
+            });
+
+            return subSheetValidation;
         },
 
         getDefaultStructure : function(obj) {
@@ -599,7 +616,7 @@
                 if (that.isTextAlignRight(errorData)) {
                     errorIcon = '<div class="ev-warning"><div class=warn-sign><span class="glyphicon glyphicon-warning-sign" style="color:yellow;">&nbsp;</span></div></div>';
                 }
-    
+
                 that.settings(errorData, 'ev-error', errorIcon + errorData.innerText.trim(), true);
                 that.designStyle(errorData, that.object.style.error, true);
 
@@ -626,7 +643,7 @@
                     $(item).find('td:gt(' + halfNum + ')').each(function (tdIndex, tdElement) {
                         $(tdElement).find('.ev-tooltip').css('right','99%');
                     });
-                    
+
                 } else {
 
                     $(item).each (function (index, element) {
