@@ -589,27 +589,34 @@
                 if (that.isTextAlignRight(errorData)) {
                     errorIcon = '<div class="ev-warning"><div class=warn-sign><span class="glyphicon glyphicon-warning-sign" style="color:yellow;">&nbsp;</span></div></div>';
                 }
-
+    
                 that.settings(errorData, 'ev-error', errorIcon + errorData.innerText.trim(), true);
                 that.designStyle(errorData, that.object.style.error, true);
 
                 errorData.querySelector('.warn-sign').innerHTML += '<span class="ev-tooltip">' + element.errorMessage + '</span>';
 
-                if(isNomalErros){
+                if (isNomalErros) {
                     that.setErrorEdge(target, body, element.row, element.column);
                 }
 
             });
         },
 
-        // 주 시트는 마지막 컬럼이 레이아웃을 넘어가지 않게 처리함
+        // 주 시트의 전체 칼럼 중 반절의 칼럼은 왼쪽으로 tooltip이 뜨게함
         // 서브 시트는 모든 컬럼이 레이아웃을 넘어가지 않게 처리함
         setErrorTooltipTdLast: function(body, isNomalErros) {
-            $(body).find('tr').each(function (index, item) {
 
+            let halfNum = $(body).find('tr:first td').size() / 2;
+
+            $(body).find('tr').each(function (index, item) {
                 if (isNomalErros) {
-                    $(item).find('td:last .ev-tooltip').css('right','99%');
+                    
+                    $(item).find('td:gt(' + halfNum + ')').each(function (tdIndex, tdElement) {
+                        $(tdElement).find('.ev-tooltip').css('right','99%');
+                    });
+                    
                 } else {
+
                     $(item).each (function (index, element) {
                         let tdArray = $(element).find('td');
                         tdArray.each (function (tdIndex, tdElement) {
