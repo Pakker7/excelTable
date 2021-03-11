@@ -5,7 +5,7 @@ table thead tr .ev-column {font-weight: 800; background: #a9a9a9;text-align: cen
 /*table thead tr .ev-ellipsis {text-overflow: ellipsis;white-space: nowrap; overflow: hidden; max-width: 0;}*/
 table thead tr .ev-ellipsis {text-overflow: ellipsis;}
 
-table .ev-row {font-weight: 800; background: #a9a9a9;width: 20px!important; text-align: center;}
+table .ev-row {font-weight: 800; background: #a9a9a9;width: 45px!important; text-align: center;}
 .text-left-important{text-align: left!important}
 .key {background-image: url(./images/ico_key.png);background-repeat : no-repeat;background-size : cover;width:12px;height: 12px;display:inline-block; margin-right: 2px;}
 

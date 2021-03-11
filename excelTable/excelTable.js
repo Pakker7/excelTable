@@ -106,9 +106,9 @@
                     return;
                 }
 
-                if(element.origin[0]) {
+                if (element === null) {
                     subSheetValidation = false;
-                } else if (element.origin[0].A) {
+                } else if(element.origin.length === 0){
                     subSheetValidation = false;
                 }
             });
@@ -628,8 +628,6 @@
 
             });
 
-
-            // });
         },
 
         // 주 시트의 전체 칼럼 중 반절의 칼럼은 왼쪽으로 tooltip이 뜨게함
